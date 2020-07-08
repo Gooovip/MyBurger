@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import Aux from '../../hoc/Auxiliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+
 
 const INGREDIENT_PRICES = {
-  meat: 1.3,
-  salad: 0.2,
-  bacon: 0.7,
-  cheese: 0.4
+  meat: 1.5,
+  salad: 0.5,
+  bacon: 0.5,
+  cheese: 0.5
 };
 
-class BurgerBulider extends Component {
+class burgerBulider extends Component {
   state = {
     ingredients: {
       bacon: 0,
@@ -18,8 +21,25 @@ class BurgerBulider extends Component {
       meat: 0,
       salad: 0
     },
-    totalPrice: 3
+    totalPrice: 3,
+    purchasable: false
   };
+  
+  // Other way ///
+  // updatePurchasableState = (ingredients) => {
+  //     const sum = Object.keys(ingredients)
+  //     .map(igKey => {
+  //       return ingredients[igKey]
+  //     }).reduce((sum, el) => {
+  //         return sum + el ;
+  //     },0)  
+  //     this.setState({purchasable: sum > 0})
+  // };
+
+  updatePurchasableState = (totalPrice) => {
+    const sum = totalPrice;
+    this.setState({purchasable: sum > 3})
+  }
 
   addIngredientHandelr = (type) => {
     const oldCount = this.state.ingredients[type];
@@ -32,6 +52,8 @@ class BurgerBulider extends Component {
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice + INGREDIENT_PRICES[type];
     this.setState({totalPrice: newPrice, ingredients: updateIngredients})
+    // this.updatePurchasableState(updateIngredients)
+    this.updatePurchasableState(newPrice)
   };
 
   removeIngredientHandelr = (type) => {
@@ -48,6 +70,8 @@ class BurgerBulider extends Component {
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice - INGREDIENT_PRICES[type];
     this.setState({totalPrice: newPrice, ingredients: updateIngredients})
+    // this.updatePurchasableState(updateIngredients)
+    this.updatePurchasableState(newPrice)
   };
 
   render() {
@@ -57,17 +81,26 @@ class BurgerBulider extends Component {
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0
     }
+
+    
+
     return (
       <Aux>
         <Burger ingredients = {this.state.ingredients} />
+        <Modal>
+          <OrderSummary ingredients={this.state.ingredients} 
+          totalPrice={this.state.totalPrice} />
+        </Modal>
         <BuildControls 
         Addition = {this.addIngredientHandelr}
         Decrease = {this.removeIngredientHandelr}
         Disabled = {disabledInfo}
-        price = {this.state.totalPrice}/>
+        price = {this.state.totalPrice}
+        purchasable = {this.state.purchasable}
+        />
       </Aux>
     );
   }
 }
 
-export default BurgerBulider;
+export default burgerBulider;
