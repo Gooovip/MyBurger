@@ -22,7 +22,8 @@ class burgerBulider extends Component {
       salad: 0
     },
     totalPrice: 3,
-    purchasable: false
+    purchasable: false,
+    purchasing: false
   };
   
   // Other way ///
@@ -74,6 +75,17 @@ class burgerBulider extends Component {
     this.updatePurchasableState(newPrice)
   };
 
+  purchasHandelr = () => {
+    this.setState({purchasing: true})
+  };
+  
+  purchasCloseHandelr = () => {
+    this.setState({purchasing: false})
+  };
+  purchasCountinueHandelr = () => {
+    alert('You will Countinue checkout')
+  };
+
   render() {
     const disabledInfo = {
       ...this.state.ingredients
@@ -87,9 +99,11 @@ class burgerBulider extends Component {
     return (
       <Aux>
         <Burger ingredients = {this.state.ingredients} />
-        <Modal>
+        <Modal show = {this.state.purchasing} close = {this.purchasCloseHandelr}>
           <OrderSummary ingredients={this.state.ingredients} 
-          totalPrice={this.state.totalPrice} />
+          totalPrice = {this.state.totalPrice}
+          close = {this.purchasCloseHandelr}
+          countinue = {this.purchasCountinueHandelr}/>
         </Modal>
         <BuildControls 
         Addition = {this.addIngredientHandelr}
@@ -97,6 +111,7 @@ class burgerBulider extends Component {
         Disabled = {disabledInfo}
         price = {this.state.totalPrice}
         purchasable = {this.state.purchasable}
+        ordered = {this.purchasHandelr}
         />
       </Aux>
     );
