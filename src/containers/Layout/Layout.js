@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import Aux from '../../hoc/Auxiliary';
+import Aux from '../../hoc/Auxiliary/Auxiliary';
 import classes from './Layout.module.css';
-import Toolbar from '../Navigation/Toolbar/Toolbar';
-import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
+import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
 
 class Layout extends Component {
   state = {
-    showBackdrop: true
+    showBackdrop: false
+  }
+
+  drawerToggleHandelr = () => {
+    this.setState({showBackdrop: true})
   }
 
   BackdropCloseHandelr = () => {
@@ -16,7 +20,7 @@ class Layout extends Component {
   render() {
     return(
         <Aux>
-          <Toolbar />
+          <Toolbar toggleContral={this.drawerToggleHandelr} />
           <SideDrawer open = {this.state.showBackdrop} 
             close = {this.BackdropCloseHandelr} />
           <main className={classes.Content}>

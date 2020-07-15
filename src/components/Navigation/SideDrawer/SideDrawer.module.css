@@ -9,9 +9,9 @@
     background-color: white;
     padding: 32px 16px;
     box-sizing: border-box;
-    transition: transform 0.3s ease-out;
-    /* box-shadow: 0 0 2px #ccc;
-    border-right: 2px solid #ccc; */
+    transition: all 0.3s ease-out;
+    box-shadow: 0 0 2px black;
+    border-right: 2px solid #ccc;
 }
 
 @media (min-width: 500px) {
@@ -22,12 +22,10 @@
 
 .Open {
     transform: translateX(0);
-    background-color: yellow;
 }
 
 .Close {
-    transform: translateX(-100);
-    background-color: red;
+    transform: translateX(-100vh);
 }
 
 .Logo {
