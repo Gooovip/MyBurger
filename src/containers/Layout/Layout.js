@@ -9,20 +9,20 @@ class Layout extends Component {
     showBackdrop: false
   }
 
-  drawerToggleHandelr = () => {
+  drawerToggleHandler = () => {
     this.setState({showBackdrop: true})
   }
 
-  BackdropCloseHandelr = () => {
+  BackdropCloseHandler = () => {
     this.setState({showBackdrop: false})
   };
   
   render() {
     return(
         <Aux>
-          <Toolbar toggleContral={this.drawerToggleHandelr} />
+          <Toolbar toggleContral={this.drawerToggleHandler} />
           <SideDrawer open = {this.state.showBackdrop} 
-            close = {this.BackdropCloseHandelr} />
+            close = {this.BackdropCloseHandler} />
           <main className={classes.Content}>
             {this.props.children}
           </main>

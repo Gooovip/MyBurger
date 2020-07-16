@@ -12,7 +12,7 @@ const orderSummary = (props) => {
   return (
       <Aux>
         <Button btnType="DangerClose"
-        clicked={props.close}>X</Button>
+        clicked={props.close}>x</Button>
         <h3>Your Order</h3>
         <p>A delicious burger with the folowing ingredients:</p>
         <ul>

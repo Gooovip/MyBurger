@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-
+import axios from '../../axios-orders';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 const INGREDIENT_PRICES = {
   meat: 1.5,
@@ -23,7 +25,8 @@ class burgerBulider extends Component {
     },
     totalPrice: 3,
     purchasable: false,
-    purchasing: false
+    purchasing: false,
+    lodding: false
   };
   
   // Other way ///
@@ -42,7 +45,7 @@ class burgerBulider extends Component {
     this.setState({purchasable: sum > 3})
   }
 
-  addIngredientHandelr = (type) => {
+  addIngredientHandler = (type) => {
     const oldCount = this.state.ingredients[type];
     const updateCount = oldCount + 1 ; 
     const updateIngredients = {
@@ -57,7 +60,7 @@ class burgerBulider extends Component {
     this.updatePurchasableState(newPrice)
   };
 
-  removeIngredientHandelr = (type) => {
+  removeIngredientHandler = (type) => {
     const oldCount = this.state.ingredients[type];
     if(oldCount <= 0){
       return;
@@ -75,15 +78,37 @@ class burgerBulider extends Component {
     this.updatePurchasableState(newPrice)
   };
 
-  purchasHandelr = () => {
+  purchasHandler = () => {
     this.setState({purchasing: true})
   };
   
-  purchasCloseHandelr = () => {
+  purchasCloseHandler = () => {
     this.setState({purchasing: false})
   };
-  purchasCountinueHandelr = () => {
-    alert('You will Countinue checkout')
+  purchasCountinueHandler = () => {
+    this.setState({lodding: true})
+    // alert('You will Countinue checkout')
+    const order = {
+      Ingredients: this.state.ingredients,
+      Price: this.state.totalPrice,
+      Customer: {
+        Name: 'Ghadeer Jarullah',
+        Address: {
+          Street: 'TestStreet',
+          ZipCode: '12345',
+          Country: 'Netherlands'
+        },
+        Email: 'test@test.com'
+      },
+      Shipping: 'fastest'
+    };
+    axios.post('/orders.json', order)
+        .then(response => {
+          this.setState({lodding: false, purchasing: false})
+        })
+        .catch(error => {
+          this.setState({lodding: false, purchasing: false})
+        });
   };
 
   render() {
@@ -94,24 +119,27 @@ class burgerBulider extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0
     }
 
-    
+    let orderSummary = <OrderSummary ingredients={this.state.ingredients} 
+                        totalPrice = {this.state.totalPrice}
+                        close = {this.purchasCloseHandler}
+                        countinue = {this.purchasCountinueHandler}/>
+        if(this.state.lodding){
+          orderSummary = <Spinner />
+        };               
 
     return (
       <Aux>
         <Burger ingredients = {this.state.ingredients} />
-        <Modal show = {this.state.purchasing} close = {this.purchasCloseHandelr}>
-          <OrderSummary ingredients={this.state.ingredients} 
-          totalPrice = {this.state.totalPrice}
-          close = {this.purchasCloseHandelr}
-          countinue = {this.purchasCountinueHandelr}/>
+        <Modal show = {this.state.purchasing} close = {this.purchasCloseHandler}>
+            {orderSummary}
         </Modal>
         <BuildControls 
-        Addition = {this.addIngredientHandelr}
-        Decrease = {this.removeIngredientHandelr}
+        Addition = {this.addIngredientHandler}
+        Decrease = {this.removeIngredientHandler}
         Disabled = {disabledInfo}
         price = {this.state.totalPrice}
         purchasable = {this.state.purchasable}
-        ordered = {this.purchasHandelr}
+        ordered = {this.purchasHandler}
         />
       </Aux>
     );
